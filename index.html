@@ -1,0 +1,2759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Java Data</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --button-bg: #1e1e1e;
+            --button-hover-bg: #333333;
+            --dropdown-bg: #2c2c2c;
+            --dropdown-hover-bg: rgba(255, 255, 255, 0.1);
+            --input-bg: #1e1e1e;
+            --input-border: #555555;
+        }
+
+        body.light-theme {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --button-bg: #f0f0f0;
+            --button-hover-bg: #dddddd;
+            --dropdown-bg: #ffffff;
+            --dropdown-hover-bg: #f0f0f0;
+            --input-bg: #ffffff;
+            --input-border: #cccccc;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .theme-toggle-button {
+    background-color: transparent; /* Makes the background transparent */
+    color: var(--text-color);      /* Keeps the text color as it is */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    position: fixed;
+    top: 20px;
+    right: 75px;
+    z-index: 1000;
+    transition: background-color 0.3s, color 0.3s; /* Add color transitions */
+}
+
+.theme-toggle-button:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Optional: Slight background color on hover */
+    color: var(--text-color); /* Adjust hover text color if needed */
+}
+
+/* ////////////////////////////////////////////////////////////////////////////////////// */
+
+
+.dropdown {
+    position: fixed;
+    top: 20px;
+    right: 11px;
+    z-index: 1000;
+}
+
+.dropdown-button {
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    opacity: 0.7;
+    transition: opacity 0.3s, background-color 0.3s;
+}
+
+.dropdown-button:hover {
+    opacity: 1;
+    background-color: var(--button-hover-bg);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--dropdown-bg);
+    min-width: 210px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    border-radius: 5px;
+    top: 100%;
+    right: 0;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.dropdown-content a {
+    color: var(--text-color);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--dropdown-hover-bg);
+}
+
+.nested-dropdown {
+    position: relative;
+}
+/* ////////////////////////////////////////////////////////////////////////////// */
+.variableInitilizationStatement-link,
+.operator-link,
+.token-link,
+.methods-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 8px;
+}
+/* ///////////////////////////////////////////////////////////////////////// */
+.dropdown-icon {
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+}
+
+.nested-dropdown-content {
+    display: none;
+    background-color: var(--dropdown-bg);
+    padding-left: 20px;
+    border-top: 1px solid var(--dropdown-hover-bg);
+}
+
+.nested-dropdown-content a {
+    padding: 8px 16px;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+
+/* /////////////////////////////////////////////////////// */
+
+.dropdown-content, .nested-dropdown-content {
+    display: none;
+}
+
+.dropdown-content.show, .nested-dropdown-content.show {
+    display: block;
+}
+
+
+
+        /* ///////////////////////////////////////////////////////////////////////////////////////////////////// */
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left:0; 
+        }
+
+        li {
+            background: var(--button-bg);
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            padding: 15px;
+        }
+
+        details {
+            cursor: pointer;
+        }
+
+        details summary {
+            font-weight: bold;
+            font-size: 1.0em;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        details[open] summary::before {
+            content: "▼";
+            margin-right: 10px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        summary::before {
+            content: "►";
+            margin-right: 10px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        details p {
+            margin: 10px 0 0 25px;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        li:hover {
+            background: var(--button-hover-bg);
+        }
+
+        .search-container {
+    position: fixed;
+    top: 20px;
+    right: 135px; /* Adjust as needed for desired right edge spacing */
+    z-index: 1000;
+    padding-right: 10px; /* Space inside the container on the right side */
+    width: 200px; /* Adjust this to control the container width */
+    display: flex; /* Use flexbox to center the input */
+    justify-content: center; /* Center the input horizontally */
+}
+
+.search-input {
+    padding: 10px;
+    padding-right: 40px; /* Space for clear button */
+    border-radius: 5px;
+    border: 1px solid var(--input-border);
+    font-size: 16px;
+    width: 100%; /* Adjust to full width of container */
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    position: relative; /* Ensure clear button is positioned relative to this */
+    z-index: 1000;
+    opacity: 0.7;
+    transition: opacity 0.3s, background-color 0.3s;
+}
+
+.search-input:hover,
+.search-input:focus {
+    opacity: 1; /* Full opacity on hover and focus */
+}
+
+.clear-btn {
+    position: absolute;
+    right: 15px; /* Adjusted to ensure proper spacing */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+    color: #888;
+    display: none; /* Initially hidden */
+    z-index: 1001; /* Above input */
+}
+
+/* Show clear button when input is not empty or focused/hovered */
+.search-input:not(:placeholder-shown) ~ .clear-btn,
+.search-input:focus ~ .clear-btn,
+.search-input:hover ~ .clear-btn {
+    display: inline;
+}
+
+.clear-btn:hover {
+    color: #555; /* Change color on hover */
+}
+
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .search-input {
+        width: calc(100% - 60px); /* Fit on smaller screens */
+        font-size: 19px;
+        padding-right: 60px; /* Adjust padding for clear button */
+    }
+    
+    .clear-btn {
+        font-size: 19px; /* Adjust font size */
+    }
+}
+
+@media (max-width: 480px) {
+    .search-input {
+        font-size: 15px; /* Smaller font size on very small screens */
+        padding-right: 50px; /* Adjust padding */
+    }
+    
+    .clear-btn {
+        font-size: 18px; /* Smaller font size for clear button */
+    }
+}
+
+
+
+pre code {
+    font-size: 16px;
+    padding: 10px;
+    background-color: var(--code-bg);
+    color: var(--code-text);
+    border-radius: 5px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+    display: block;
+    border: 1px solid var(--code-border);
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    pre code {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    pre code {
+        font-size: 12px;
+        padding: 6px;
+    }
+}
+
+/* ////////////////////////////////////////////////////////////// */
+/* Mock Button Styling */
+.mock-button {
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    opacity: 0.85;
+    transition: opacity 0.3s, background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    margin: 20px auto; /* Center horizontally and add top margin */
+    display: block; /* Ensure the button is treated as a block element */
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mock-button:hover {
+    opacity: 1;
+    background-color: var(--button-hover-bg);
+    transform: scale(1.08);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Mock Questions Container */
+#mockQuestions {
+    margin-top: -50px;
+    
+    position: relative;
+    padding: 20px;
+    background-color: var(--button-bg);
+    border-radius: 10px;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Close Button Styling */
+.close-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background-color: transparent; /* Transparent background */
+    color: var(--text-color);
+    border: 2px solid rgba(0, 0, 0, 0.2); /* Visible border */
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 18px;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Subtle background color on hover */
+    transform: scale(1.1);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    border-color: rgba(0, 0, 0, 0.3); /* Darker border on hover */
+}
+
+.close-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border-color: rgba(0, 0, 0, 0.4); /* Darker border on press */
+}
+
+
+
+
+/* Answer Button Styling */
+.answer-button {
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.answer-button:hover {
+    background-color: var(--button-hover-bg);
+    transform: scale(1.07);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Answer Text Styling */
+.answer {
+    margin-top: 15px;
+    padding: 12px;
+    background-color: var(--button-bg);
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    line-height: 1.6;
+    font-size: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+
+/* /////////////////////////// for searching the data when no data found */
+#noResultsMessage {
+    font-size: 16px;
+    color: #999;
+    margin-top: 20px;
+    text-align: center;
+}
+
+
+
+/* ///////////////////////////////////////////////////////////// this is for image notes */
+
+ .image-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.zoom-target {
+  width: 30%;
+  min-width: 100px;
+  transition: width 0.3s ease;
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+.zoom-buttons {
+  display: none;
+  margin-top: 10px;
+}
+
+/* Show zoom buttons only on laptops and wider */
+@media screen and (min-width: 1024px) {
+  .zoom-buttons {
+    display: block;
+  }
+}
+
+/* ✅ Make images normal and stacked on mobile */
+@media screen and (max-width: 600px) {
+  .image-container {
+    display: block;  /* Disable flex on mobile */
+  }
+
+  .zoom-target {
+    width: 100%;     /* Full width for each image */
+    height: 100%;
+    display: block;
+    margin-bottom: 10px;
+    padding: 3px;
+  }
+
+  .section-title {
+    font-size: 1rem;
+  }
+
+  details {
+    padding: 8px;
+    max-width: 100%;
+  }
+}
+
+/* Caption style */
+figcaption {
+  font-size: 0.9em;
+  color: gray;
+  margin-top: 5px;
+}
+
+
+
+
+/* //////////////////////////////////////////// */
+
+#sectionQuestionEasy {
+    color: #28a745;   /* Green */
+    text-align: center;
+}
+
+#sectionQuestionMedium {
+    color: #ffc107;   /* Amber / Yellow */
+    text-align: center;
+}
+
+#sectionQuestionHard {
+    color: #dc3545;   /* Red */
+    text-align: center;
+}
+
+
+
+    </style>
+</head>
+<body>
+
+    <br>
+    <br>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle-button" onclick="toggleTheme()">
+        <i class="fas fa-sun"></i> 
+    </button>
+    
+    <button class="mock-button" onclick="generateMockQuestions()">Generate Mock Questions</button>
+
+    <!-- Search bar -->
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" onkeyup="searchContent()" placeholder="Search...">
+        <span id="clearBtn" class="clear-btn" onclick="clearSearch()">&#10006;</span>
+    </div>
+
+
+
+    <!-- /////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+
+                  <!-- ////////////////////////////////    When you do on nested loop changes on js and css  /////////////////////////////////////////////////// -->
+
+                  <!--   <div class="nested-dropdown">
+                    <a href="#------------------" class="-------------------  -link" onclick="toggleNestedDropdown('-----------------------DropdownContent')">
+                        ---------------------------
+                        <svg xmlns="http://www.w3.org/2000/svg" class="dropdown-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16l-6-6h12l-6 6z" />
+                        </svg>
+                    </a>
+                    <div class="nested-dropdown-content" id="------------------------DropdownContent">
+                        <a href="#keyword">Local Variable</a>
+                        <a href="#identifiers">Global Variable</a>
+                    </div>
+                </div>     -->
+
+
+
+     <div class="dropdown">
+         <button class="dropdown-button" onclick="toggleDropdown()">
+            <i class="fas fa-ellipsis-h"></i>
+         </button>
+         <div class="dropdown-content" id="dropdownContent">
+            <a href="#programming_language">Programming Language</a>
+            <a href="#types_programming_language">Types OF Programming Language</a>
+             <a href="#platform_independent">Java Platform Independent</a>  
+
+<!-- //////////////////////////////////////////////////////////////////////////// -->
+
+
+<!-- //////////////////////////////////////////////////////////////////////////// -->
+            <!-- Add more items as needed -->
+
+
+
+            
+
+
+
+
+            
+            
+
+        </div>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    <br>
+    <br>
+    <br>
+   
+    <div id="mockQuestions"></div>
+
+    <!-- ////// for searching the data when no data found -->
+    <p id="noResultsMessage" style="display:none;">No results found.</p>
+
+    
+
+
+<!-- ///////////////////////////////////////////////////////////////// -->
+
+
+    <h1 id="programming_language"  style="color: rgb(164, 118, 233); font-size: 40px;">Programming Language</h1>
+
+<ul>
+
+    <li>
+  <span class="section-title">Notes?</span>
+  <details>
+    <summary>Check Notes</summary>
+    <p>Here is the explanation image for better understanding:</p>
+
+    <div class="image-container" id="imageContainer">
+      <img class="zoom-target" src="pgm/pgm1.jpg" alt="Note Image">
+      <img class="zoom-target" src="pgm/pgm2.jpg" alt="Note Image">
+    </div>
+
+    <figcaption>Figure: Concept Illustration</figcaption>
+
+    <div class="zoom-buttons">
+      <button onclick="zoomOut()">Zoom Out</button>
+      <button onclick="zoomIn()">Zoom In</button>
+    </div>
+  </details>
+</li>
+
+        <h1 id="sectionQuestionEasy">Easy Question</h1>
+          <li><span class="section-title">1. What is a programming language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>A programming language is a <u>set of instructions</u> that humans use to <u>communicate with a computer</u> to perform specific tasks.</p>
+    </details>
+</li>
+
+<li><span class="section-title">2. What is a machine-level language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Machine-level language is a <u>low-level language</u> written in <u>binary (0s and 1s)</u>, directly understandable by the computer processor.</p>
+    </details>
+</li>
+
+<li><span class="section-title">3. Give an example of a machine-level language.</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Binary language (0 and 1).</p>
+        
+    </details>
+</li>
+
+<li><span class="section-title">4. What is an assembly-level language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Assembly-level language uses <u>mnemonics</u> (short words like ADD, SUB, MOV) instead of binary, but still requires an <u> to translate it.</u></p>
+    </details>
+</li>
+
+<li><span class="section-title">5. What is a high-level language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>A high-level language is <u>human-readable,</u> easy to understand, and must be translated into machine code using a <u>compiler or interpreter</u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">6. Give two examples of high-level languages.</span>
+    <details>
+        <summary>Answer</summary>
+        <p>C, Java, Python.</p>
+    </details>
+</li>
+
+<li><span class="section-title">7. Who introduced the first machine-level language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>John von Neumann in 1940.</p>
+    </details>
+</li>
+
+<li><span class="section-title">8. Who introduced the first high-level language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>John Backus in 1950.</p>
+    </details>
+</li>
+
+<li><span class="section-title">9. What does an assembler do?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>An assembler <u>converts assembly language into machine code.</u></p>
+    </details>
+</li>
+
+<li><span class="section-title">10. What is a compiler?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>A compiler translates an <u>entire high-level</u> program into <u>machine code</u> at once.</p>
+    </details>
+</li>
+
+<li><span class="section-title">11. What is an interpreter?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>An interpreter <u>translates and executes line by line</u> instead of compiling the entire program at once.</p>
+    </details>
+</li>
+<li><span class="section-title">12. Example of a compiled language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>C, C++.</p>
+    </details>
+</li>
+
+<li><span class="section-title">13. Example of an interpreted language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Python, JavaScript.</p>
+    </details>
+</li>
+
+<li><span class="section-title">14. What is a low-level language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>A low-level language is <u>closer to machine code,</u> harder for humans but faster for computers (e.g., machine language, assembly).</p>
+    </details>
+</li>
+
+<li><span class="section-title">15. What is a high-level language mainly used for?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>To make programming easier for humans with <u>readable syntax.</u></p>
+    </details>
+</li>
+
+
+        <h1 id="sectionQuestionMedium">Medium Question</h1>
+
+          <li><span class="section-title">1. Differentiate between compiler and interpreter.</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Compiler translates the <u>whole program before execution</u>, while interpreter translates <u>line by line</u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">2. Why is assembly language called a mid-level language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Because it uses <u>mnemonics</u> (easier than binary) but still depends on <u>machine architecture</u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">3. What is the role of a translator in programming languages?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>A translator converts <u>high-level code into machine code</u> for execution.</p>
+    </details>
+</li>
+
+<li><span class="section-title">4. Define procedural language with an example.</span>
+    <details>
+        <summary>Answer</summary>
+        <p>A procedural language follows <u>step-by-step instructions (e.g., C).</u></p>
+    </details>
+</li>
+
+<li><span class="section-title">5. Define object-oriented language with an example.</span>
+    <details>
+        <summary>Answer</summary>
+        <p>An object-oriented language is based on <u>objects and classes</u> (e.g., Java, C++).</p>
+    </details>
+</li>
+
+<li><span class="section-title">6. Define functional programming language with an example.</span>
+    <details>
+        <summary>Answer</summary>
+        <p>A functional language is based on <u>mathematical functions</u> (e.g., Haskell, Lisp).</p>
+    </details>
+</li>
+
+<li><span class="section-title">7. Which is faster: compiled or interpreted language? Why?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Compiled languages are faster because the code is fully <u>converted before execution</u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">8. Why is high-level language portable?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Because the same program can run on <u>different machines</u> with the help of a <u>compiler/interpreter</u>.</p>
+    </details>
+</li>
+<li><span class="section-title">9. What is meant by platform independence?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>A language like Java can run on any<u> OS because of the JVM (Java Virtual Machine)</u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">10. Which language type is closest to hardware?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Machine language (binary).</p>
+    </details>
+</li>
+
+<li><span class="section-title">11. Mention one advantage and one disadvantage of low-level languages.</span>
+    <details>
+        <summary>Answer</summary>
+        <p><strong>Advantage:</strong> Fast execution. <br><strong>Disadvantage:</strong> Hard to understand.</p>
+    </details>
+</li>
+
+<li><span class="section-title">12. Mention one advantage and one disadvantage of high-level languages.</span>
+    <details>
+        <summary>Answer</summary>
+        <p><strong>Advantage:</strong> Easy to learn. <br><strong>Disadvantage:</strong> Slower than low-level.</p>
+    </details>
+</li>
+
+<li><span class="section-title">13. What is the function of a linker?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>A linker combines different program modules into a <u>single executable file.</u></p>
+    </details>
+</li>
+
+<li><span class="section-title">14. Which programming paradigm does Python support?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Object-oriented, procedural, and functional.</p>
+    </details>
+</li>
+
+<li><span class="section-title">15. Why is assembly language faster than high-level languages?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Because it is closer to <u>machine code</u> and requires less translation.</p>
+    </details>
+</li>
+
+
+
+        <h1 id="sectionQuestionHard">Hard Question</h1>
+
+   <li><span class="section-title">1. Explain how source code becomes executable code.</span>
+    <details>
+        <summary>Answer</summary>
+        <p>The <b><u>source code</u></b> (written by programmer) → <b><u>Compiler/Interpreter translates</u></b> → <b><u>Object code</u></b> → <b><u>Linker joins modules</u></b> → <b><u>Loader loads into memory</u></b> → <b><u>Executable program runs</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">2. Compare machine-level, assembly-level, and high-level languages with examples.</span>
+    <details>
+        <summary>Answer</summary>
+        <p><b><u>Machine-level:</u></b> Binary (0s,1s) – Example: <b><u>1010</u></b>.<br>
+           <b><u>Assembly-level:</u></b> Mnemonics (ADD, SUB) – Example: <b><u>MOV AX, BX</u></b>.<br>
+           <b><u>High-level:</u></b> Human-readable – Example: <b><u>print("Hello")</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">3. Why is Java called “Write once, run anywhere”?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Because Java code is compiled into <b><u>bytecode</u></b>, which runs on <b><u>JVM across platforms</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">4. Differentiate between procedural and object-oriented programming.</span>
+    <details>
+        <summary>Answer</summary>
+        <p><b><u>Procedural:</u></b> Based on <b><u>functions and procedures</u></b> (C).<br>
+           <b><u>OOP:</u></b> Based on <b><u>objects and classes</u></b> (Java).</p>
+    </details>
+</li>
+
+<li><span class="section-title">5. Explain the role of intermediate code in programming languages.</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Some compilers (like <b><u>Java</u></b>) produce <b><u>intermediate code (bytecode)</u></b>, which is later executed by a <b><u>virtual machine</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">6. What is the difference between static typing and dynamic typing?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><b><u>Static typing:</u></b> Variables have <b><u>fixed type at compile-time</u></b> (C, Java).<br>
+           <b><u>Dynamic typing:</u></b> Types checked <b><u>at runtime</u></b> (Python, JavaScript).</p>
+    </details>
+</li>
+
+<li><span class="section-title">7. Why are low-level languages not portable?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Because they depend on <b><u>hardware architecture</u></b>, so the same code cannot run on <b><u>different processors</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">8. What is the difference between compiler errors and runtime errors?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><b><u>Compiler error:</u></b> Detected <b><u>during compilation</u></b> (syntax errors).<br>
+           <b><u>Runtime error:</u></b> Detected <b><u>during execution</u></b> (divide by zero).</p>
+    </details>
+</li>
+
+<li><span class="section-title">9. What are scripting languages? Give two examples.</span>
+    <details>
+        <summary>Answer</summary>
+        <p><b><u>Scripting languages</u></b> are <b><u>interpreted languages</u></b> used for <b><u>automation</u></b> (e.g., <b><u>Python</u></b>, <b><u>JavaScript</u></b>).</p>
+    </details>
+</li>
+
+<li><span class="section-title">10. How does a Just-In-Time (JIT) compiler improve performance?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><b><u>JIT</u></b> compiles <b><u>bytecode into machine code at runtime</u></b>, making execution <b><u>faster</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">11. Differentiate between declarative and imperative programming.</span>
+    <details>
+        <summary>Answer</summary>
+        <p><b><u>Declarative:</u></b> Focuses on <b><u>what to do</u></b> (SQL, Prolog).<br>
+           <b><u>Imperative:</u></b> Focuses on <b><u>how to do</u></b> (C, Java).</p>
+    </details>
+</li>
+
+<li><span class="section-title">12. What is the significance of mnemonics in assembly language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><b><u>Mnemonics</u></b> make code <b><u>easier to read</u></b> by replacing <b><u>binary</u></b> with short words like <b><u>ADD, SUB, MOV</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">13. Why is C called a middle-level language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Because <b><u>C</u></b> supports both <b><u>low-level</u></b> (pointers, memory access) and <b><u>high-level</u></b> (functions, structured programming) features.</p>
+    </details>
+</li>
+
+<li><span class="section-title">14. What is the role of an IDE (Integrated Development Environment)?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>An <b><u>IDE</u></b> provides tools like <b><u>editor</u></b>, <b><u>compiler</u></b>, <b><u>debugger</u></b>, and <b><u>build system</u></b> to help programmers.</p>
+    </details>
+</li>
+
+<li><span class="section-title">15. How is functional programming different from OOP?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><b><u>Functional:</u></b> Focuses on <b><u>functions</u></b> and <b><u>immutability</u></b> (Haskell).<br>
+           <b><u>OOP:</u></b> Focuses on <b><u>objects</u></b> and <b><u>state</u></b> (Java, Python).</p>          
+    </details>
+</li>
+
+
+</ul>
+
+
+
+
+<!-- <ul>
+    <li>
+        
+    </li>
+</ul> -->
+
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+    <h1 id="types_programming_language"  style="color: rgb(164, 118, 233); font-size: 40px;">Types OF Programming Language?</h1>
+     <ul>
+
+        <li>
+  <span class="section-title">Notes?</span>
+  <details>
+    <summary>Check Notes</summary>
+    <p>Here is the explanation image for better understanding:</p>
+
+    <div class="image-container" id="imageContainer">
+      <img class="zoom-target" src="typepgm/type1.jpg" alt="Note Image">
+       <img class="zoom-target" src="typepgm/type2.jpg" alt="Note Image">
+    </div>
+
+    <figcaption>Figure: Concept Illustration</figcaption>
+
+    <div class="zoom-buttons">
+      <button onclick="zoomOut()">Zoom Out</button>
+      <button onclick="zoomIn()">Zoom In</button>
+    </div>
+  </details>
+</li>
+       <!-- Easy questions -->
+     <h1 id="sectionQuestionEasy">Easy Question</h1>
+       
+         
+     <li><span class="section-title">1. What are compiled languages?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Compiled languages are translated into <u><b>machine code</b></u> before execution (e.g., <u><b>C, C++</b></u>).</p>
+    </details>
+</li>
+
+<li><span class="section-title">2. What are interpreted languages?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Interpreted languages are executed <u><b>line by line</b></u> by an <u><b>interpreter</b></u> (e.g., <u><b>Python, JavaScript</b></u>).</p>
+    </details>
+</li>
+
+<li><span class="section-title">3. What is a low-level language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>A low-level language is close to <u><b>machine code</b></u>, like <u><b>Assembly</b></u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">4. What is a high-level language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>A high-level language is <u><b>human-readable</b></u> and <u><b>abstracted from hardware</b></u>, like <u><b>Java, Python</b></u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">5. Which type of language is C?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>C is a <u><b>compiled</b></u>, <u><b>procedural</b></u>, <u><b>high-level</b></u> language.</p>
+    </details>
+</li>
+
+<li><span class="section-title">6. Which type of language is Python?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Python is an <u><b>interpreted</b></u>, <u><b>high-level</b></u>, <u><b>multi-paradigm</b></u> language.</p>
+    </details>
+</li>
+
+<li><span class="section-title">7. What are procedural languages?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Procedural languages follow <u><b>step-by-step execution</b></u> using <u><b>functions/procedures</b></u> (e.g., <u><b>C, Pascal</b></u>).</p>
+    </details>
+</li>
+
+<li><span class="section-title">8. What are object-oriented languages (OOP)?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>They use <u><b>classes</b></u> and <u><b>objects</b></u> to model <u><b>real-world concepts</b></u> (e.g., <u><b>Java, C++</b></u>).</p>
+    </details>
+</li>
+
+<li><span class="section-title">9. What are functional languages?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>They focus on <u><b>mathematical functions</b></u> and <u><b>immutability</b></u> (e.g., <u><b>Haskell, Lisp</b></u>).</p>
+    </details>
+</li>
+
+<li><span class="section-title">10. Which type of language is Assembly?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Assembly is a <u><b>low-level</b></u>, <u><b>machine-oriented</b></u> language.</p>
+    </details>
+</li>
+
+<li><span class="section-title">11. What is a scripting language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>A scripting language <u><b>automates tasks</b></u>, usually <u><b>interpreted</b></u> (e.g., <u><b>Perl, Python, JavaScript</b></u>).</p>
+    </details>
+</li>
+
+<li><span class="section-title">12. What type of language is JavaScript?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>JavaScript is an <u><b>interpreted</b></u>, <u><b>scripting</b></u>, <u><b>high-level</b></u> language.</p>
+    </details>
+</li>
+
+<li><span class="section-title">13. What is a domain-specific language (DSL)?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>A DSL is designed for a <u><b>specific purpose</b></u> (e.g., <u><b>SQL</b></u> for databases, <u><b>HTML</b></u> for web).</p>
+    </details>
+</li>
+
+<li><span class="section-title">14. What type of paradigm does Java follow?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Java is primarily an <u><b>object-oriented</b></u> language.</p>
+    </details>
+</li>
+
+<li><span class="section-title">15. Which type of language directly interacts with hardware?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><u><b>Low-level languages</b></u> like <u><b>Assembly</b></u>.</p>
+    </details>
+</li>
+
+
+     
+
+        
+         <!-- Mediumquestions -->
+        <h1 id="sectionQuestionMedium">Medium Question</h1>
+
+         <li><span class="section-title">1. Differentiate between compiled and interpreted languages.</span>
+    <details>
+        <summary>Answer</summary>
+        <p><u><b>Compiled languages</b></u> run <u><b>faster</b></u> but require <u><b>compilation</b></u> before execution, while <u><b>interpreted languages</b></u> are <u><b>slower</b></u> but run directly <u><b>line by line</b></u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">2. Why are high-level languages more popular than low-level languages?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Because <u><b>high-level languages</b></u> are <u><b>easier to learn</b></u>, <u><b>portable</b></u>, and <u><b>reduce complexity</b></u>, while <u><b>low-level languages</b></u> require <u><b>hardware knowledge</b></u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">3. What makes object-oriented languages powerful?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Features like <u><b>encapsulation</b></u>, <u><b>inheritance</b></u>, and <u><b>polymorphism</b></u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">4. What is the main advantage of procedural languages?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><u><b>Procedural languages</b></u> make programs <u><b>easier to debug</b></u> and <u><b>structure</b></u> using <u><b>functions</b></u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">5. Why are functional languages good for parallel computing?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>They avoid <u><b>mutable state</b></u>, reducing <u><b>data conflicts</b></u> in <u><b>concurrent tasks</b></u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">6. What type of language is SQL?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><u><b>SQL</b></u> is a <u><b>domain-specific</b></u>, <u><b>declarative language</b></u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">7. Which type of language is most portable?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><u><b>High-level languages</b></u>, especially those with <u><b>virtual machines</b></u> (e.g., <u><b>Java</b></u>).</p>
+    </details>
+</li>
+
+<li><span class="section-title">8. Why is C++ called a hybrid language?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Because it supports both <u><b>procedural</b></u> and <u><b>object-oriented</b></u> paradigms.</p>
+    </details>
+</li>
+
+<li><span class="section-title">9. What is the role of scripting languages in automation?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>They <u><b>simplify repetitive tasks</b></u> like <u><b>file handling</b></u>, <u><b>system commands</b></u>, and <u><b>web scripting</b></u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">10. Compare procedural and functional languages.</span>
+    <details>
+        <summary>Answer</summary>
+        <p><u><b>Procedural</b></u> uses <u><b>instructions</b></u> and <u><b>state</b></u>, while <u><b>functional</b></u> uses <u><b>functions</b></u> and <u><b>immutability</b></u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">11. What makes interpreted languages flexible for beginners?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>They allow <u><b>immediate execution</b></u> without <u><b>compiling</b></u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">12. Which type of language is best for system programming?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><u><b>Low-level</b></u> and <u><b>compiled languages</b></u> like <u><b>C</b></u>, <u><b>Assembly</b></u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">13. How do multi-paradigm languages help developers?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>They allow using different styles (<u><b>procedural</b></u>, <u><b>OOP</b></u>, <u><b>functional</b></u>) in the same program (e.g., <u><b>Python</b></u>).</p>
+    </details>
+</li>
+
+<li><span class="section-title">14. What type of language is Prolog?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><u><b>Prolog</b></u> is a <u><b>logic-based</b></u> <u><b>declarative language</b></u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">15. Why are compiled languages faster than interpreted languages?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Because code is <u><b>pre-translated into machine code</b></u> before execution.</p>
+    </details>
+</li>
+
+
+
+         
+       <!-- hardquestions -->
+       <h1 id="sectionQuestionHard">Hard Question</h1>
+
+      <li><span class="section-title">1. Compare procedural, object-oriented, and functional languages.</span>
+    <details>
+        <summary>Answer</summary>
+        <p><b><u>Procedural</u></b> uses <b><u>functions</u></b>, <b><u>OOP</u></b> uses <b><u>objects/classes</u></b>, and <b><u>functional</u></b> uses <b><u>immutable functions</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">2. Explain trade-offs between compiled and interpreted languages.</span>
+    <details>
+        <summary>Answer</summary>
+        <p><b><u>Compiled</u></b>: <b><u>high performance</u></b>, <b><u>less portability</u></b>. <b><u>Interpreted</u></b>: <b><u>slower</u></b>, but <b><u>highly portable</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">3. Why are functional languages preferred in AI and data processing?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Due to <b><u>recursion</u></b>, <b><u>immutability</u></b>, and <b><u>mathematical function-based design</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">4. How does Java achieve platform independence?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Through the <b><u>JVM (Java Virtual Machine)</u></b>, which executes <b><u>bytecode</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">5. Why is C considered both low-level and high-level?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>It provides <b><u>hardware access</u></b> like low-level, but also has <b><u>structured programming</u></b> like high-level.</p>
+    </details>
+</li>
+
+<li><span class="section-title">6. Compare imperative and declarative languages.</span>
+    <details>
+        <summary>Answer</summary>
+        <p><b><u>Imperative</u></b>: specifies <b><u>how to do</u></b> (C, Java). <b><u>Declarative</u></b>: specifies <b><u>what to do</u></b> (SQL, Prolog).</p>
+    </details>
+</li>
+
+<li><span class="section-title">7. How does JIT compilation combine compiled and interpreted approaches?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>It <b><u>compiles code at runtime</u></b>, <b><u>improving speed</u></b> and <b><u>maintaining flexibility</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">8. Why is C++ faster than Java?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><b><u>C++</u></b> is <b><u>fully compiled into machine code</u></b>, while <b><u>Java</u></b> runs on a <b><u>virtual machine</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">9. Why are scripting languages slower than compiled languages?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Because they are <b><u>interpreted line by line</u></b> instead of <b><u>pre-compiled</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">10. What is the role of type systems in language classification?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>They define how <b><u>data types</u></b> are handled (e.g., <b><u>static</u></b> vs. <b><u>dynamic typing</u></b>).</p>
+    </details>
+</li>
+
+<li><span class="section-title">11. How do multi-paradigm languages like Python differ from pure OOP languages?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><b><u>Python</u></b> supports <b><u>procedural</u></b> and <b><u>functional styles</u></b>, while <b><u>pure OOP</u></b> (e.g., <b><u>Smalltalk</u></b>) focuses only on <b><u>objects</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">12. Why are low-level languages unsuitable for large projects?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Because they are <b><u>complex</u></b>, <b><u>hardware-dependent</u></b>, and <b><u>less portable</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">13. How do domain-specific languages (DSLs) improve productivity?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>They are <b><u>optimized for a narrow domain</u></b>, <b><u>reducing complexity</u></b> (e.g., <b><u>SQL</u></b> for queries).</p>
+    </details>
+</li>
+
+<li><span class="section-title">14. Why are functional languages less common in industry despite their advantages?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Due to <b><u>steep learning curves</u></b>, <b><u>lack of libraries</u></b>, and <b><u>different programming mindset</u></b>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">15. Explain how hybrid languages like Scala combine paradigms.</span>
+    <details>
+        <summary>Answer</summary>
+        <p><b><u>Scala</u></b> supports both <b><u>OOP</u></b> and <b><u>functional programming</u></b>, giving developers <b><u>flexibility</u></b>.</p>
+    </details>
+</li>
+
+
+
+</ul>
+
+<!-- dfdff///////////////////////////////////////////////////////////////////////////////////////-->
+
+
+
+      <h1 id="platform_independent" style="color: rgb(164, 118, 233); font-size: 40px;">Java Platform Independent</h1>
+      
+      <ul>
+
+        <li>
+  <span class="section-title">Notes?</span>
+  <details>
+    <summary>Check Notes</summary>
+    <p>Here is the explanation image for better understanding:</p>
+
+    <div class="image-container" id="imageContainer">
+      <img class="zoom-target" src="ide_pl/ide_pl1.png" alt="Note Image">
+      <img class="zoom-target" src="ide_pl/ide_pl2.png" alt="Note Image">
+      <img class="zoom-target" src="ide_pl/ide_pl3.png" alt="Note Image">   
+    </div>
+
+    <figcaption>Figure: Concept Illustration</figcaption>
+
+    <div class="zoom-buttons">
+      <button onclick="zoomOut()">Zoom Out</button>
+      <button onclick="zoomIn()">Zoom In</button>
+    </div>
+  </details>
+</li>
+       <!-- Easy questions -->
+     <h1 id="sectionQuestionEasy">Easy Question</h1> 
+
+     <li>
+  <span class="section-title">1. What does it mean when we say Java is platform independent?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>It means <u><b>Java programs</b></u> can run on <u><b>any operating system</b></u> without changing the code.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">2. Who is responsible for Java’s platform independent?</span>
+  <details>
+    <summary>Answer</summary>
+    <p><u><b>Java Virtual Machine (JVM)</b></u></p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">3. What is generated after compiling a Java program?</span>
+  <details>
+    <summary>Answer</summary>
+    <p><u><b>Bytecode (.class file)</b></u></p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">4. What is the extension of Java source files?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>.java</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">5. What is the extension of compiled Java bytecode files?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>.class</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">6. What does JVM stand for?</span>
+  <details>
+    <summary>Answer</summary>
+    <p><u><b>Java Virtual Machine</b></u></p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">7. What is the slogan that explains Java’s platform independent?</span>
+  <details>
+    <summary>Answer</summary>
+    <p><u><b>Write Once, Run Anywhere (WORA)</b></u></p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">8. Can the same .class file run on Windows and Linux?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>Yes, if both have <u><b>JVM</b></u> installed.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">9. Why can’t a C program compiled on Windows run directly on Linux?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>Because <u><b>C</b></u> generates <u><b>machine code</b></u> tied to one <u><b>OS</b></u>.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">10. What is bytecode in simple words?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>A <u><b>universal code</b></u> that any <u><b>JVM</b></u> can understand.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">11. Is bytecode machine-dependent or machine-independent?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>Machine-independent</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">12. Which comes first: JVM or JRE?</span>
+  <details>
+    <summary>Answer</summary>
+    <p><u><b>JRE</b></u> includes the <u><b>JVM</b></u>, so <u><b>JRE</b></u> comes first.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">13. Can you run Java without JDK?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>Yes, you only need <u><b>JRE</b></u> to run, but <u><b>JDK</b></u> is required to develop.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">14. Why is Java sometimes called both compiled and interpreted?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>Because it’s first <u><b>compiled</b></u> into <u><b>bytecode</b></u>, then <u><b>interpreted/executed</b></u> by <u><b>JVM</b></u>.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">15. Is Java 100% platform independent?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>No, because <u><b>JVM</b></u> is <u><b>OS-dependent</b></u>.</p>
+  </details>
+</li>
+
+         <!-- medium questions -->
+        <h1 id="sectionQuestionMedium">Medium Question</h1>
+
+       <li>
+  <span class="section-title">1. Explain the difference between platform dependent and platform independent languages.</span>
+  <details>
+    <summary>Answer</summary>
+    <p><u><b>Platform dependent (C, C++)</b></u>: Runs only on the OS it was compiled for.<br>
+       <u><b>Platform independent (Java)</b></u>: Runs anywhere with JVM.
+    </p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">2. Why does JVM differ across operating systems?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>Because it must <u><b>translate bytecode into machine code specific to that OS</b></u>.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">3. How does JRE help in running Java applications?</span>
+  <details>
+    <summary>Answer</summary>
+    <p><u><b>JRE provides JVM + core libraries</b></u> required to execute bytecode.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">4. What is the difference between JDK and JRE?</span>
+  <details>
+    <summary>Answer</summary>
+    <p><u><b>JDK = JRE + development tools (compiler, debugger)</b></u>.<br>
+       <u><b>JRE = JVM + libraries (only for running programs)</b></u>.
+    </p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">5. What role does the Java compiler play in platform independent?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>It <u><b>converts source code into universal bytecode</b></u>.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">6. What is the main advantage of Java’s portability for companies?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>They can <u><b>run the same software across different systems without rewriting</b></u>.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">7. Which Java feature directly supports platform independent?</span>
+  <details>
+    <summary>Answer</summary>
+    <p><u><b>Bytecode + JVM architecture</b></u>.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">8. Why does Java execution need two steps (compilation + interpretation)?</span>
+  <details>
+    <summary>Answer</summary>
+    <p><u><b>Compilation makes bytecode universal</b></u>; <u><b>interpretation adapts it to the OS</b></u>.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">9. Can Java programs call non-Java code? Does it affect portability?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>Yes, using <u><b>JNI (Java Native Interface)</b></u>. But <u><b>it reduces portability</b></u>.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">10. Why is Java called secure along with platform independent?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>Because <u><b>JVM runs code in a sandbox environment to prevent OS damage</b></u>.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">11. Is the JVM free for all operating systems?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>Yes, <u><b>JVMs are freely available for major OS</b></u>.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">12. What is the difference between bytecode and machine code?</span>
+  <details>
+    <summary>Answer</summary>
+    <p><u><b>Bytecode: universal, runs on any JVM</b></u>.<br>
+       <u><b>Machine code: specific to CPU/OS</b></u>.
+    </p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">13. How does the classloader in JVM support platform independent?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>It <u><b>loads classes at runtime, so the same program works on any OS</b></u>.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">14. Which part of Java ensures the same code behaves the same on all OS?</span>
+  <details>
+    <summary>Answer</summary>
+    <p><u><b>Java API + JVM together</b></u>.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title">15. What could break Java’s platform independent in practice?</span>
+  <details>
+    <summary>Answer</summary>
+    <p>Using <u><b>OS-specific file paths, native libraries, or hardware-specific code</b></u>.</p>
+  </details>
+</li>
+       
+
+     <!-- hard questions  -->
+        <h1 id="sectionQuestionHard">Hard Question</h1>
+
+        <li><span class="section-title">1. Describe the complete execution process of a Java program across platforms.</span>
+    <details>
+        <summary>Answer</summary>
+        <p>1. Write <u><b>.java file</b></u>.<br>
+           2. Compile → <u><b>.class bytecode</b></u>.<br>
+           3. <u><b>JVM</b></u> loads bytecode.<br>
+           4. JVM translates to <u><b>machine code</b></u>.<br>
+           5. Program executes.
+        </p>
+    </details>
+</li>
+
+<li><span class="section-title">2. Why is JVM considered platform dependent while bytecode is platform independent?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Because <u><b>JVM</b></u> is built for each OS, but <u><b>bytecode</b></u> is universal.</p>
+    </details>
+</li>
+
+<li><span class="section-title">3. What does the Just-In-Time (JIT) compiler do inside JVM?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Converts <u><b>frequently used bytecode</b></u> into <u><b>native machine code</b></u> at runtime.</p>
+    </details>
+</li>
+
+<li><span class="section-title">4. Why does Java execution sometimes appear slower than C/C++?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Because <u><b>JVM translation</b></u> adds an extra step vs <u><b>direct machine code</b></u> execution.</p>
+    </details>
+</li>
+
+<li><span class="section-title">5. How does the HotSpot JVM improve performance while keeping portability?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>It <u><b>optimizes hot code</b></u> using JIT for faster native execution.</p>
+    </details>
+</li>
+
+<li><span class="section-title">6. How is Java’s portability different from scripting languages like Python?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><u><b>Java → bytecode + JVM</b></u>.<br>
+           <u><b>Python → interpreter</b></u>.  
+           Both portable, but Java is stricter.
+        </p>
+    </details>
+</li>
+
+<li><span class="section-title">7. Can Java run on embedded systems with no OS?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Yes, with <u><b>special JVMs</b></u>, but performance is limited.</p>
+    </details>
+</li>
+
+<li><span class="section-title">8. Why is Java popular in enterprise applications due to platform independent?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Because the <u><b>same code</b></u> runs on Windows, Linux, or cloud without changes.</p>
+    </details>
+</li>
+
+<li><span class="section-title">9. How does the JVM manage different CPU architectures (Intel, ARM)?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><u><b>Different JVM builds</b></u> exist for each CPU, but <u><b>bytecode</b></u> stays portable.</p>
+    </details>
+</li>
+
+<li><span class="section-title">10. Why do developers sometimes say “Java is platform independent at the bytecode level”?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Because only <u><b>bytecode</b></u> is universal; <u><b>JVM</b></u> differs by OS.</p>
+    </details>
+</li>
+
+<li><span class="section-title">11. What is the difference between source-level portability and binary-level portability?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><u><b>Source-level</b></u>: recompile code on different OS.<br>
+           <u><b>Binary-level</b></u>: run the same compiled bytecode.
+        </p>
+    </details>
+</li>
+
+<li><span class="section-title">12. How do Java’s garbage collection and memory management contribute to safe portability?</span>
+    <details>
+        <summary>Answer</summary>
+        <p><u><b>JVM-managed memory</b></u> avoids OS-specific memory issues.</p>
+    </details>
+</li>
+
+<li><span class="section-title">13. What risks appear if you use System.getProperty("os.name") in Java programs?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>Code may behave differently on <u><b>different OS</b></u>, reducing portability.</p>
+    </details>
+</li>
+
+<li><span class="section-title">14. How does JVM security (sandbox model) make Java safe across platforms?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>It <u><b>restricts bytecode</b></u> from directly accessing <u><b>OS/hardware</b></u>.</p>
+    </details>
+</li>
+
+<li><span class="section-title">15. In large distributed systems, why is Java’s “Write Once, Run Anywhere” feature critical?</span>
+    <details>
+        <summary>Answer</summary>
+        <p>It ensures applications run seamlessly on <u><b>mixed environments</b></u> without code changes.</p>     
+    </details>
+</li>
+
+
+</ul>   
+
+
+
+
+   
+<script>
+
+
+
+
+//////////////////////////////////////////// Zoom Image functionality
+
+  let widthPercent = 30; // starting width of each image
+
+  function zoomOut() {
+    if (widthPercent > 10) {
+      widthPercent -= 5;
+      applyZoom();
+    }
+  }
+
+  function zoomIn() {
+    if (widthPercent < 100) {
+      widthPercent += 5;
+      applyZoom();
+    }
+  }
+
+  function applyZoom() {
+    const images = document.querySelectorAll('.zoom-target');
+    images.forEach(img => {
+      img.style.width = widthPercent + '%';
+    });
+  }
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+
+    // Search Functionality
+    function searchContent() {
+    var input, filter, sections, li, clearBtn, noResultsMessage;
+    input = document.getElementById('searchInput');
+    filter = input.value.toUpperCase();
+    sections = document.querySelectorAll('h1');
+    li = document.querySelectorAll('li');
+    clearBtn = document.getElementById('clearBtn');
+    noResultsMessage = document.getElementById('noResultsMessage');
+
+    // Show or hide the clear button based on the search input
+    if (filter) {
+        clearBtn.style.display = 'block';
+    } else {
+        clearBtn.style.display = 'none';
+    }
+
+    var hasVisibleItems = false;
+
+    // Loop through all headings, and hide those who don't match the search query
+    for (var i = 0; i < sections.length; i++) {
+        var txtValue = sections[i].textContent || sections[i].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            sections[i].style.display = ''; // Show matching headings
+            hasVisibleItems = true;
+        } else {
+            sections[i].style.display = 'none'; // Hide non-matching headings
+        }
+    }
+
+    // Loop through all list items, and hide those who don't match the search query
+    for (var j = 0; j < li.length; j++) {
+        var txtValue = li[j].textContent || li[j].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[j].style.display = ''; // Show matching list items
+            hasVisibleItems = true;
+        } else {
+            li[j].style.display = 'none'; // Hide non-matching list items
+        }
+    }
+
+    // Show a 'No results found' message if no items are visible
+    if (noResultsMessage) {
+        if (filter && !hasVisibleItems) {
+            noResultsMessage.style.display = 'block';
+        } else {
+            noResultsMessage.style.display = 'none';
+        }
+    }
+}
+
+
+
+    // Clear Search Input
+    function clearSearch() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('clearBtn').style.display = 'none';
+        searchContent(); // Re-run the search to reset the list
+    }
+
+    // Theme Toggle
+    function toggleTheme() {
+        document.body.classList.toggle('light-theme');
+    }
+
+    // Dropdown Toggle
+    function toggleDropdown() {
+        var dropdownContent = document.getElementById('dropdownContent');
+        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close dropdown if clicked outside
+    window.onclick = function(event) {
+    if (!event.target.matches('.dropdown-button')) {
+        document.querySelectorAll('.dropdown-content').forEach(function(dropdown) {
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            }
+        });
+    }
+};
+
+</script>
+
+<!-- 
+
+,{
+    question: " ",
+    answer: " "
+},
+
+
+-->
+
+<script>
+    
+   // Array to store the questions and answers
+const questions = [
+
+
+
+
+
+
+//// programing language
+
+    {
+        question: "What is a programming language?",
+        answer: "A programming language is a set of instructions that humans use to communicate with a computer to perform specific tasks."
+    },
+    {
+        question: "What is a machine-level language?",
+        answer: "Machine-level language is a low-level language written in binary (0s and 1s), directly understandable by the computer processor."
+    },
+    {
+        question: "Give an example of a machine-level language.",
+        answer: "Binary language (0 and 1)."
+    },
+
+    {
+        question: "What is an assembly-level language?",
+        answer: "Assembly-level language uses mnemonics (short words like ADD, SUB, MOV) instead of binary, but still requires an assembler to translate it."
+    },
+    {
+        question: "What is a high-level language?",
+        answer: "A high-level language is human-readable, easy to understand, and must be translated into machine code using a compiler or interpreter."
+    },
+    {
+        question: "Give two examples of high-level languages.",
+        answer: "C, Java, Python."
+    },
+    {
+        question: "Who introduced the first machine-level language?",
+        answer: "John von Neumann in 1940."
+    },
+    {
+        question: "Who introduced the first high-level language?",
+        answer: "John Backus in 1950."
+    },
+    {
+        question: "What does an assembler do?",
+        answer: "An assembler converts assembly language into machine code."
+    },
+    {
+        question: "What is a compiler?",
+        answer: "A compiler translates an entire high-level program into machine code at once."
+    },
+    
+    {
+        question: "What is an interpreter?",
+        answer: "An interpreter translates and executes line by line instead of compiling the entire program at once."
+    },
+    {
+        question: "Example of a compiled language?",
+        answer: "C, C++."
+    },
+    {
+        question: "Example of an interpreted language?",
+        answer: "Python, JavaScript."
+    },
+    {
+        question: "What is a low-level language?",
+        answer: "A low-level language is closer to machine code, harder for humans but faster for computers (e.g., machine language, assembly)."
+    },
+    {
+        question: "What is a high-level language mainly used for?",
+        answer: "To make programming easier for humans with readable syntax."
+    },
+    {
+        question: "Differentiate between compiler and interpreter.",
+        answer: "Compiler translates the whole program before execution, while interpreter translates line by line."
+    },
+    {
+        question: "Why is assembly language called a mid-level language?",
+        answer: "Because it uses mnemonics (easier than binary) but still depends on machine architecture."
+    },
+    {
+        question: "What is the role of a translator in programming languages?",
+        answer: "A translator converts high-level code into machine code for execution."
+    },
+    {
+        question: "Define procedural language with an example.",
+        answer: "A procedural language follows step-by-step instructions (e.g., C)."
+    },
+    {
+        question: "Define object-oriented language with an example.",
+        answer: "An object-oriented language is based on objects and classes (e.g., Java, C++)."
+    },
+    {
+        question: "Define functional programming language with an example.",
+        answer: "A functional language is based on mathematical functions (e.g., Haskell, Lisp)."
+    },
+    {
+        question: "Which is faster: compiled or interpreted language? Why?",
+        answer: "Compiled languages are faster because the code is fully converted before execution."
+    },
+    {
+        question: "Why is high-level language portable?",
+        answer: "Because the same program can run on different machines with the help of a compiler/interpreter."
+    },
+    {
+        question: "What is meant by platform independence?",
+        answer: "A language like Java can run on any OS because of the JVM (Java Virtual Machine)."
+    },
+    {
+        question: "Which language type is closest to hardware?",
+        answer: "Machine language (binary)."
+    },
+    
+    {
+        question: "Mention one advantage and one disadvantage of low-level languages.",
+        answer: "Advantage: Fast execution. Disadvantage: Hard to understand."
+    },
+    {
+        question: "Mention one advantage and one disadvantage of high-level languages.",
+        answer: "Advantage: Easy to learn. Disadvantage: Slower than low-level."
+    },
+    {
+        question: "What is the function of a linker?",
+        answer: "A linker combines different program modules into a single executable file."
+    },
+    {
+        question: "Which programming paradigm does Python support?",
+        answer: "Object-oriented, procedural, and functional."
+    },
+    {
+        question: "Why is assembly language faster than high-level languages?",
+        answer: "Because it is closer to machine code and requires less translation."
+    },
+
+    {
+        question: "Explain how source code becomes executable code.",
+        answer: "The source code (written by programmer) → Compiler/Interpreter translates → Object code → Linker joins modules → Loader loads into memory → Executable program runs."
+    },
+    {
+        question: "Compare machine-level, assembly-level, and high-level languages with examples.",
+        answer: "• Machine-level: Binary (0s,1s) – Example: 1010.\n• Assembly-level: Mnemonics (ADD, SUB) – Example: MOV AX, BX.\n• High-level: Human-readable – Example: print(\"Hello\")."
+    },
+    {
+        question: "Why is Java called “Write once, run anywhere”?",
+        answer: "Because Java code is compiled into bytecode, which runs on JVM across platforms."
+    },
+    {
+        question: "Differentiate between procedural and object-oriented programming.",
+        answer: "• Procedural: Based on functions and procedures (C).\n• OOP: Based on objects and classes (Java)."
+    },
+    {
+        question: "Explain the role of intermediate code in programming languages.",
+        answer: "Some compilers (like Java) produce intermediate code (bytecode), which is later executed by a virtual machine."
+    },
+    {
+        question: "What is the difference between static typing and dynamic typing?",
+        answer: "• Static typing: Variables have fixed type at compile-time (C, Java).\n• Dynamic typing: Types checked at runtime (Python, JavaScript)."
+    },
+    {
+        question: "Why are low-level languages not portable?",
+        answer: "Because they depend on hardware architecture, so the same code cannot run on different processors."
+    },
+    
+    {
+        question: "What is the difference between compiler errors and runtime errors?",
+        answer: "• Compiler error: Detected during compilation (syntax errors).\n• Runtime error: Detected during execution (divide by zero)."
+    },
+    {
+        question: "What are scripting languages? Give two examples.",
+        answer: "Scripting languages are interpreted languages used for automation (e.g., Python, JavaScript)."
+    },
+    {
+        question: "How does a Just-In-Time (JIT) compiler improve performance?",
+        answer: "JIT compiles bytecode into machine code at runtime, making execution faster."
+    },
+    {
+        question: "Differentiate between declarative and imperative programming.",
+        answer: "• Declarative: Focuses on what to do (SQL, Prolog).\n• Imperative: Focuses on how to do (C, Java)."
+    },
+    {
+        question: "What is the significance of mnemonics in assembly language?",
+        answer: "Mnemonics make code easier to read by replacing binary with short words like ADD, SUB, MOV."
+    },
+    {
+        question: "Why is C called a middle-level language?",
+        answer: "Because C supports both low-level (pointers, memory access) and high-level (functions, structured programming) features."
+    },
+    {
+        question: "What is the role of an IDE (Integrated Development Environment)?",
+        answer: "An IDE provides tools like editor, compiler, debugger, and build system to help programmers."
+    },
+    {
+        question: "How is functional programming different from OOP?",
+        answer: "• Functional: Focuses on functions and immutability (Haskell).\n• OOP: Focuses on objects and state (Java, Python)."
+    },
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    //types of programming language
+
+    {
+        question: "What are compiled languages?",
+        answer: "Compiled languages are translated into machine code before execution (e.g., C, C++)."
+    },
+    {
+        question: "What are interpreted languages?",
+        answer: "Interpreted languages are executed line by line by an interpreter (e.g., Python, JavaScript)."
+    },
+    {
+        question: "What is a low-level language?",
+        answer: "A low-level language is close to machine code, like Assembly."
+    },
+    {
+        question: "What is a high-level language?",
+        answer: "A high-level language is human-readable and abstracted from hardware, like Java, Python."
+    },
+    {
+        question: "Which type of language is C?",
+        answer: "C is a compiled, procedural, high-level language."
+    },
+    {
+        question: "Which type of language is Python?",
+        answer: "Python is an interpreted, high-level, multi-paradigm language."
+    },
+    {
+        question: "What are procedural languages?",
+        answer: "Procedural languages follow a step-by-step execution using functions/procedures (e.g., C, Pascal)."
+    },
+    {
+        question: "What are object-oriented languages (OOP)?",
+        answer: "They use classes and objects to model real-world concepts (e.g., Java, C++)."
+    },
+    {
+        question: "What are functional languages?",
+        answer: "They focus on mathematical functions and immutability (e.g., Haskell, Lisp)."
+    },
+    {
+        question: "Which type of language is Assembly?",
+        answer: "Assembly is a low-level, machine-oriented language."
+    },
+    {
+        question: "What is a scripting language?",
+        answer: "A scripting language automates tasks, usually interpreted (e.g., Perl, Python, JavaScript)."
+    },
+    {
+        question: "What type of language is JavaScript?",
+        answer: "JavaScript is an interpreted, scripting, high-level language."
+    },
+    {
+        question: "What is a domain-specific language (DSL)?",
+        answer: "A DSL is designed for a specific purpose (e.g., SQL for databases, HTML for web)."
+    },
+    {
+        question: "What type of paradigm does Java follow?",
+        answer: "Java is primarily an object-oriented language."
+    },
+    {
+        question: "Which type of language directly interacts with hardware?",
+        answer: "Low-level languages like Assembly."
+    },
+    
+    {
+        question: "Differentiate between compiled and interpreted languages.",
+        answer: "Compiled languages run faster but require compilation before execution, while interpreted languages are slower but run directly line by line."
+    },
+    {
+        question: "Why are high-level languages more popular than low-level languages?",
+        answer: "Because high-level languages are easier to learn, portable, and reduce complexity, while low-level languages require hardware knowledge."
+    },
+    {
+        question: "What makes object-oriented languages powerful?",
+        answer: "Features like encapsulation, inheritance, and polymorphism."
+    },
+    {
+        question: "What is the main advantage of procedural languages?",
+        answer: "Procedural languages make programs easier to debug and structure using functions."
+    },
+    {
+        question: "Why are functional languages good for parallel computing?",
+        answer: "They avoid mutable state, reducing data conflicts in concurrent tasks."
+    },
+    {
+        question: "What type of language is SQL?",
+        answer: "SQL is a domain-specific, declarative language."
+    },
+    {
+        question: "Which type of language is most portable?",
+        answer: "High-level languages, especially those with virtual machines (e.g., Java)."
+    },
+    {
+        question: "Why is C++ called a hybrid language?",
+        answer: "Because it supports both procedural and object-oriented paradigms."
+    },
+    {
+        question: "What is the role of scripting languages in automation?",
+        answer: "They simplify repetitive tasks like file handling, system commands, and web scripting."
+    },
+    {
+        question: "Compare procedural and functional languages.",
+        answer: "Procedural uses instructions and state, while functional uses functions and immutability."
+    },
+    {
+        question: "What makes interpreted languages flexible for beginners?",
+        answer: "They allow immediate execution without compiling."
+    },
+    {
+        question: "Which type of language is best for system programming?",
+        answer: "Low-level and compiled languages like C, Assembly."
+    },
+    {
+        question: "How do multi-paradigm languages help developers?",
+        answer: "They allow using different styles (procedural, OOP, functional) in the same program (e.g., Python)."
+    },
+    {
+        question: "What type of language is Prolog?",
+        answer: "Prolog is a logic-based declarative language."
+    },
+    {
+        question: "Why are compiled languages faster than interpreted languages?",
+        answer: "Because code is pre-translated into machine code before execution."
+    },
+
+    {
+        question: "Compare procedural, object-oriented, and functional languages.",
+        answer: "Procedural uses functions, OOP uses objects/classes, and functional uses immutable functions."
+    },
+    {
+        question: "Explain trade-offs between compiled and interpreted languages.",
+        answer: "Compiled: high performance, less portability. Interpreted: slower, but highly portable."
+    },
+    {
+        question: "Why are functional languages preferred in AI and data processing?",
+        answer: "Due to recursion, immutability, and mathematical function-based design."
+    },
+    {
+        question: "How does Java achieve platform independence?",
+        answer: "Through the JVM (Java Virtual Machine), which executes bytecode."
+    },
+    {
+        question: "Why is C considered both low-level and high-level?",
+        answer: "It provides hardware access like low-level, but also has structured programming like high-level."
+    },
+    {
+        question: "Compare imperative and declarative languages.",
+        answer: "Imperative: specifies how to do (C, Java). Declarative: specifies what to do (SQL, Prolog)."
+    },
+    {
+        question: "How does JIT compilation combine compiled and interpreted approaches?",
+        answer: "It compiles code at runtime, improving speed and maintaining flexibility."
+    },
+    {
+        question: "Why is C++ faster than Java?",
+        answer: "C++ is fully compiled into machine code, while Java runs on a virtual machine."
+    },
+    {
+        question: "Why are scripting languages slower than compiled languages?",
+        answer: "Because they are interpreted line by line instead of pre-compiled."
+    },
+    {
+        question: "What is the role of type systems in language classification?",
+        answer: "They define how data types are handled (e.g., static vs. dynamic typing)."
+    },
+    {
+        question: "How do multi-paradigm languages like Python differ from pure OOP languages?",
+        answer: "Python supports procedural and functional styles, while pure OOP (e.g., Smalltalk) focuses only on objects."
+    },
+    {
+        question: "Why are low-level languages unsuitable for large projects?",
+        answer: "Because they are complex, hardware-dependent, and less portable."
+    },
+    {
+        question: "How do domain-specific languages (DSLs) improve productivity?",
+        answer: "They are optimized for a narrow domain, reducing complexity (e.g., SQL for queries)."
+    },
+    {
+        question: "Why are functional languages less common in industry despite their advantages?",
+        answer: "Due to steep learning curves, lack of libraries, and different programming mindset."
+    },
+    {
+        question: "Explain how hybrid languages like Scala combine paradigms.",
+        answer: "Scala supports both OOP and functional programming, giving developers flexibility."
+    },
+
+    //java platform independent 
+
+    
+ 
+
+  {
+
+    "question": "What does it mean when we say Java is platform independent?",
+
+    "answer": "It means Java programs can run on any operating system without changing the code."
+
+  },
+
+  {
+
+    "question": "Who is responsible for Java’s platform independence?",
+
+    "answer": "The Java Virtual Machine (JVM)."
+
+  },
+
+  {
+
+    "question": "What is generated after compiling a Java program?",
+
+    "answer": "Bytecode (.class file)."
+
+  },
+
+  {
+
+    "question": "What is the extension of Java source files?",
+
+    "answer": ".java"
+
+  },
+
+  {
+
+    "question": "What is the extension of compiled Java bytecode files?",
+
+    "answer": ".class"
+
+  },
+
+  {
+
+    "question": "What does JVM stand for?",
+
+    "answer": "Java Virtual Machine."
+
+  },
+
+  {
+
+    "question": "What is the slogan that explains Java’s platform independence?",
+
+    "answer": "Write Once, Run Anywhere (WORA)."
+
+  },
+
+  {
+
+    "question": "Can the same .class file run on Windows and Linux?",
+
+    "answer": "Yes, if both have JVM installed."
+
+  },
+
+  {
+
+    "question": "Why can’t a C program compiled on Windows run directly on Linux?",
+
+    "answer": "Because C generates machine code tied to one OS."
+
+  },
+
+  {
+
+    "question": "What is bytecode in simple words?",
+
+    "answer": "A universal code that any JVM can understand."
+
+  },
+
+  {
+
+    "question": "Is bytecode machine-dependent or machine-independent?",
+
+    "answer": "Machine-independent."
+
+  },
+
+  {
+
+    "question": "Which comes first: JVM or JRE?",
+
+    "answer": "JRE includes the JVM, so JRE comes first."
+
+  },
+
+  {
+
+    "question": "Can you run Java without JDK?",
+
+    "answer": "Yes, you only need JRE to run, but JDK is required to develop."
+
+  },
+
+  {
+
+    "question": "Why is Java sometimes called both compiled and interpreted?",
+
+    "answer": "Because it’s first compiled into bytecode, then interpreted/executed by JVM."
+
+  },
+
+  {
+
+    "question": "Is Java 100% platform independent?",
+
+    "answer": "No, because JVM is OS-dependent."
+
+  },
+
+  {
+
+    "question": "Explain the difference between platform dependent and platform independent languages.",
+
+    "answer": "Platform dependent (C, C++): Runs only on the OS it was compiled for. Platform independent (Java): Runs anywhere with JVM."
+
+  },
+
+  {
+
+    "question": "Why does JVM differ across operating systems?",
+
+    "answer": "Because it must translate bytecode into machine code specific to that OS."
+
+  },
+
+  {
+
+    "question": "How does JRE help in running Java applications?",
+
+    "answer": "JRE provides JVM + core libraries required to execute bytecode."
+
+  },
+
+  {
+
+    "question": "What is the difference between JDK and JRE?",
+
+    "answer": "JDK = JRE + development tools (compiler, debugger). JRE = JVM + libraries (only for running programs)."
+
+  },
+
+  {
+
+    "question": "What role does the Java compiler play in platform independence?",
+
+    "answer": "It converts source code into universal bytecode."
+
+  },
+
+  {
+
+    "question": "What is the main advantage of Java’s portability for companies?",
+
+    "answer": "They can run the same software across different systems without rewriting."
+
+  },
+
+  {
+
+    "question": "Which Java feature directly supports platform independence?",
+
+    "answer": "Bytecode + JVM architecture."
+
+  },
+
+  {
+
+    "question": "Why does Java execution need two steps (compilation + interpretation)?",
+
+    "answer": "Compilation makes bytecode universal; interpretation adapts it to the OS."
+
+  },
+
+  {
+
+    "question": "Can Java programs call non-Java code? Does it affect portability?",
+
+    "answer": "Yes, using JNI (Java Native Interface). But it reduces portability."
+
+  },
+
+  {
+
+    "question": "Why is Java called secure along with platform independent?",
+
+    "answer": "Because JVM runs code in a sandbox environment to prevent OS damage."
+
+  },
+
+  {
+
+    "question": "Is the JVM free for all operating systems?",
+
+    "answer": "Yes, JVMs are freely available for major OS."
+
+  },
+
+  {
+
+    "question": "What is the difference between bytecode and machine code?",
+
+    "answer": "Bytecode: universal, runs on any JVM. Machine code: specific to CPU/OS."
+
+  },
+
+  {
+
+    "question": "How does the classloader in JVM support platform independence?",
+
+    "answer": "It loads classes at runtime, so the same program works on any OS."
+
+  },
+
+  {
+
+    "question": "Which part of Java ensures the same code behaves the same on all OS?",
+
+    "answer": "Java API + JVM together."
+
+  },
+
+  {
+
+    "question": "What could break Java’s platform independence in practice?",
+
+    "answer": "Using OS-specific file paths, native libraries, or hardware-specific code."
+
+  },
+
+  {
+
+    "question": "Describe the complete execution process of a Java program across platforms.",
+
+    "answer": "1. Write .java file. 2. Compile → .class bytecode. 3. JVM loads bytecode. 4. JVM translates it to machine code of that OS. 5. Program executes."
+
+  },
+
+  {
+
+    "question": "Why is JVM considered platform dependent while bytecode is platform independent?",
+
+    "answer": "Because JVM is built for each OS, but bytecode remains universal."
+
+  },
+
+  {
+
+    "question": "What does the Just-In-Time (JIT) compiler do inside JVM?",
+
+    "answer": "Converts frequently used bytecode into native machine code at runtime for speed."
+
+  },
+
+  {
+
+    "question": "Why does Java execution sometimes appear slower than C/C++?",
+
+    "answer": "Because JVM translation adds an extra step compared to direct machine code execution."
+
+  },
+
+  {
+
+    "question": "How does the HotSpot JVM improve performance while keeping portability?",
+
+    "answer": "It optimizes frequently used bytecode with JIT for faster native execution."
+
+  },
+
+  {
+
+    "question": "How is Java’s portability different from scripting languages like Python?",
+
+    "answer": "Java → Compiles to bytecode + JVM executes. Python → Uses interpreter directly. Both portable, but Java is stricter."
+
+  },
+
+  {
+
+    "question": "Can Java run on embedded systems with no OS?",
+
+    "answer": "Yes, with special JVMs, but performance is limited."
+
+  },
+
+  {
+
+    "question": "Why is Java popular in enterprise applications due to platform independence?",
+
+    "answer": "Because the same code can run on Windows servers, Linux servers, or cloud environments."
+
+  },
+
+  {
+
+    "question": "How does the JVM manage different CPU architectures (Intel, ARM)?",
+
+    "answer": "Different JVM versions are compiled for each CPU, ensuring bytecode still works."
+
+  },
+
+  {
+
+    "question": "Why do developers sometimes say “Java is platform independent at the bytecode level”?",
+
+    "answer": "Because only bytecode is universal; JVM varies by OS."
+
+  },
+
+  {
+
+    "question": "What is the difference between source-level portability and binary-level portability?",
+
+    "answer": "Source-level: You can recompile code on different OS. Binary-level: You can run the same compiled code (Java bytecode)."
+
+  },
+
+  {
+
+    "question": "How do Java’s garbage collection and memory management contribute to safe portability?",
+
+    "answer": "JVM handles memory, avoiding OS-specific memory management issues."
+
+  },
+
+  {
+
+    "question": "What risks appear if you use System.getProperty(\"os.name\") in Java programs?",
+
+    "answer": "Code may behave differently on different OS, reducing portability."
+
+  },
+
+  {
+
+    "question": "How does JVM security (sandbox model) make Java safe across platforms?",
+
+    "answer": "It restricts bytecode from directly accessing OS/hardware, preventing malware."
+
+  },
+
+  {
+
+    "question": "In large distributed systems, why is Java’s “Write Once, Run Anywhere” feature critical?",
+
+    "answer": "It ensures that applications can run seamlessly on mixed environments (Windows clients, Linux servers, etc.) without code changes."
+
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+];
+
+function generateMockQuestions() {
+    const mockQuestionsContainer = document.getElementById('mockQuestions');
+    mockQuestionsContainer.innerHTML = ''; // Clear previous content
+
+    // Add a close button
+    const closeButton = document.createElement('button');
+    closeButton.className = 'close-btn';
+    closeButton.innerText = '×';
+    closeButton.onclick = function() {
+        mockQuestionsContainer.innerHTML = ''; // Clear the mock questions when close button is clicked
+    };
+    mockQuestionsContainer.appendChild(closeButton);
+
+    // Fisher-Yates shuffle algorithm for better shuffling
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    const shuffledQuestions = shuffle([...questions]).reverse(); // Shuffle and reverse the array
+    const selectedQuestions = shuffledQuestions.slice(0, 10); // Get 10 random questions starting from the last
+
+    selectedQuestions.forEach((qa, index) => {
+        const questionElement = document.createElement('div');
+        questionElement.innerHTML = `<strong>Q${index + 1}: ${qa.question}</strong>`;
+
+        const answerWrapper = document.createElement('div'); // Wrapper for answer button and answer
+        answerWrapper.className = 'answer-wrapper'; // Optional: Add a class for styling
+
+        const answerButton = document.createElement('button');
+        answerButton.className = 'answer-button';
+        answerButton.innerText = 'Answer';
+        answerButton.onclick = function() {
+            const answerElement = this.nextElementSibling;
+            answerElement.style.display = answerElement.style.display === 'block' ? 'none' : 'block';
+        };
+
+        const answerElement = document.createElement('div');
+        answerElement.className = 'answer';
+        answerElement.style.display = 'none'; // Hide answers by default
+        answerElement.innerText = qa.answer;
+
+        answerWrapper.appendChild(answerButton); // Append button to wrapper
+        answerWrapper.appendChild(answerElement); // Append answer to wrapper
+
+        questionElement.appendChild(answerWrapper); // Append wrapper to the question element
+
+        mockQuestionsContainer.appendChild(questionElement);
+    });
+}
+
+///////////////////////      Toggle dropdown    /////////////////////////////
+function toggleDropdown() {
+    var dropdownContent = document.getElementById("dropdownContent");
+    dropdownContent.classList.toggle("show"); // Use class toggling instead of inline style
+}
+
+function toggleNestedDropdown(id) {
+    var nestedDropdownContent = document.getElementById(id);
+    nestedDropdownContent.classList.toggle("show"); // Use class toggling for nested dropdowns
+}
+
+window.onclick = function(event) {
+    if (!event.target.matches('.dropdown-button, .dropdown-button *, .operator-link, .operator-link *, .token-link, .token-link *, .variableInitilizationStatement-link , .variableInitilizationStatement-link *,.methods-link,.methods-link*')) {
+        closeAllDropdowns();
+    }
+};
+
+function closeAllDropdowns() {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    for (var i = 0; i < dropdowns.length; i++) {
+        dropdowns[i].classList.remove("show"); // Remove the 'show' class instead of using display
+    }
+
+    var nestedDropdowns = document.getElementsByClassName("nested-dropdown-content");
+    for (var j = 0; j < nestedDropdowns.length; j++) {
+        nestedDropdowns[j].classList.remove("show"); // Remove the 'show' class for nested dropdowns as well
+    }
+
+
+    
+}
+
+// Event listener for main dropdown button (already handled by toggleDropdown function)
+// Use this if you prefer to trigger the toggle using the button event directly
+document.querySelector('.dropdown-button').addEventListener('click', (event) => {
+  event.stopPropagation();
+  toggleDropdown(); // Use toggleDropdown function
+});
+
+
+
+
+
+</script>
+
+</body>
+</html>
