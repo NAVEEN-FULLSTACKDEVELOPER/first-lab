@@ -1739,6 +1739,166 @@ figcaption {
 
 
 </ul>   
+<ul>
+
+<h1 id="main_method" style="color: rgb(164, 118, 233); font-size: 40px;">Main Method</h1>
+
+ <ul>
+
+ <li>
+  <span class="section-title">Notes?</span>
+  <details>
+    <summary>Check Notes</summary>
+    <p>Here is the explanation image for better understanding:</p>
+
+    <div class="image-container" id="imageContainer">
+      <img class="zoom-target" src="main_method/mainmdthpg1.jpg" alt="Note Image"> 
+        <img class="zoom-target" src="main_method/mainmdthpg2 (2).jpg" alt="Note Image">  
+        
+    </div>
+
+    <figcaption>Figure: Concept Illustration</figcaption>
+
+    <div class="zoom-buttons">
+      <button onclick="zoomOut()">Zoom Out</button>
+      <button onclick="zoomIn()">Zoom In</button>
+    </div>
+  </details>
+</li>
+
+  <h1 id="sectionQuestionEasy">Easy Question</h1> 
+
+    <li>
+  <span class="section-title"><b>1. What is the main method?</b></span>
+  <details>
+    <summary>Answer</summary>
+    <p>The main method is the program’s <b><u>entry point</u></b> — the place where the Java Virtual Machine starts running your program. Think of it as the program’s <b><u>front door</u></b>. The JVM looks for a method with the signature <b><u>public static void main(String[] args)</u></b> and starts from there.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title"><b>2. What does the signature <u>public static void main(String[] args)</u> mean (briefly)?</b></span>
+  <details>
+    <summary>Answer</summary>
+    <p>
+      • <b><u>public</u></b> — the JVM must be able to access it.<br>
+      • <b><u>static</u></b> — it belongs to the class itself (no object needed).<br>
+      • <b><u>void</u></b> — it doesn’t return a value to the JVM.<br>
+      • <b><u>main</u></b> — the method name JVM expects.<br>
+      • <b><u>String[] args</u></b> — an array that holds command-line arguments.
+    </p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title"><b>3. Why does main have to be <u>static</u>?</b></span>
+  <details>
+    <summary>Answer</summary>
+    <p>Because the JVM calls main before creating any object of the class. Marking it <b><u>static</u></b> lets the JVM call it using the class name (no instance required) — like turning on a machine from its power switch rather than needing a worker already inside the machine.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title"><b>4. Why is the return type <u>void</u>? How do I signal a status code then?</b></span>
+  <details>
+    <summary>Answer</summary>
+    <p>The JVM expects main to be <b><u>void</u></b>. If you need to return a status code to the OS, use <b><u>System.exit(code)</u></b>, where <b><u>code</u></b> is an int (0 = success by convention).</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title"><b>5. What are args? How do I read command-line input?</b></span>
+  <details>
+    <summary>Answer</summary>
+    <p><b><u>String[] args</u></b> collects command-line tokens. Example:</p>
+    <pre>
+public static void main(String[] args) {
+    System.out.println("You passed " + args.length + " args.");
+    for (String s : args) System.out.println(s);
+}
+    </pre>
+    <p>Run as <b>java MyClass hello 123</b> → <b><u>args[0] = "hello"</u></b>, <b><u>args[1] = "123"</u></b>.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title"><b>6. Can I use <u>String... args</u> (varargs) instead of String[] args?</b></span>
+  <details>
+    <summary>Answer</summary>
+    <p>Yes. <b><u>public static void main(String... args)</u></b> is valid because varargs compile to a <b><u>String[]</u></b> at runtime. Under the hood the JVM still sees a <b><u>String[]</u></b>.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title"><b>7. Does the name <u>args</u> matter?</b></span>
+  <details>
+    <summary>Answer</summary>
+    <p>No — the parameter name is arbitrary. <b>public static void main(String[] commandLine)</b> works the same. The important part is the type: <b><u>String[]</u></b> (or varargs).</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title"><b>8. Simple “Hello world” main example?</b></span>
+  <details>
+    <summary>Answer</summary>
+    <pre>
+public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Hello, world!");
+    }
+}
+    </pre>
+  </details>
+</li>
+
+<li>
+  <span class="section-title"><b>9. What happens if main is not public?</b></span>
+  <details>
+    <summary>Answer</summary>
+    <p>You can compile a non-public main, but the JVM will not find a <b><u>public entry point</u></b> and will throw <b>NoSuchMethodError</b> or similar when you try <b>java ClassName</b>. So to be runnable by the launcher, main must be <b><u>public</u></b>.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title"><b>10. Can I overload main?</b></span>
+  <details>
+    <summary>Answer</summary>
+    <p>Yes — you may define <b>public static void main(String[] args)</b> and <b>public static void main()</b>. But the JVM only calls the exact <b><u>main(String[])</u></b> signature. Overloads are useful for helper entry points you call from code.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title"><b>11. What is the “main thread”?</b></span>
+  <details>
+    <summary>Answer</summary>
+    <p>The JVM starts a thread named <b><u>main</u></b> and runs the main method on it. If you spawn more threads from main, those are additional threads.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title"><b>12. What happens if an exception is thrown and uncaught in main?</b></span>
+  <details>
+    <summary>Answer</summary>
+    <p>The program prints a <b><u>stack trace</u></b> and usually terminates with a non-zero exit. To handle error conditions gracefully, catch exceptions or use <b>throws</b> in the signature to let them bubble up and be visible.</p>
+  </details>
+</li>
+
+<li>
+  <span class="section-title"><b>13. How do I parse numbers from args?</b></span>
+  <details>
+    <summary>Answer</summary>
+    <pre>
+public static void main(String[] args) {
+  if (args.length > 0) {
+    int n = Integer.parseInt(args[0]); // may throw NumberFormatException
+    System.out.println("n = " + n);
+  }
+}
+    </pre>
+  </details>
+</li>
+
+</ul>
 
 
 
